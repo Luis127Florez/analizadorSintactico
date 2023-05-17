@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ANALIZADOR SINTÁCTICO</title>
+    <link rel="stylesheet" href="assets/bootstrapV5/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+
+<body>
+    <!-- Header -->
+    <nav class="navbar navbar-secondary bg-primary">
+        <div style="display: flex; flex-direction: row; align-items: center; margin: 0 auto;">
+            <img src="assets/img/logo.png" alt="" width="80" height="80" />
+            &nbsp &nbsp
+            <h1 class="text-white">ANALIZADOR SINTÁCTICO</h1>
+        </div>
+    </nav>
+
+    <!-- Body -->
+    <div class="mb-3 p-3">
+        <div class="container">
+            <!-- Input -->
+            <div style="display: flex; flex-direction: column;">
+                <div class="row" style="display: flex; flex-direction: column;">
+                    <div class="col">
+                        <div class="mb-3">
+                            <label>
+                                <b>¿Qué es un analizador sintáctico?</b> <br />
+                                Un analizador sintáctico o simplemente analizador, es un programa informático que
+                                analiza una cadena de símbolos según las reglas de una gramática formal.
+                            </label>
+                            <br />
+                            <br />
+                            <label for="codigo" class="form-label"><b>Escribe o pega el código a analizar</b></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="mb-3">
+                        <div class="editor">
+                            <div class="line">
+                                <p>1</p>
+                            </div>
+                            <div class="text-cont mb-3">
+                                <textarea id="codigo" class="w-75" onkeyup="update()" onchange="update()"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Result -->
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3">
+                            <h5 for="salida" class="form-label"><b>RESULTADOS</b></h5>
+                            <div id="salida" class="card"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Buttons -->
+                <div class="row">
+                    <div class="col" align="right">
+                        <button id="limpiar" type="button" class="btn btn-secondary" onclick="limpiarTexto();">
+                            LIMPIAR
+                        </button>
+                    </div>
+                    <div class="col">
+                        <button id="analizar" type="button" class="btn btn-primary" onclick="analizarCodigo();">
+                            ANALIZAR
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <br />
+
+            <!-- Tablas -->
+            <div class="row">
+                <div class="col">
+                    <div class="mb-3">
+                        <h5 for="salidaLexico" class="form-label">
+                            <b>RESULTADOS LÉXICO</b>
+                        </h5>
+                        <div class="card">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Código</th>
+                                        <th scope="col">Texto</th>
+                                        <th scope="col">Token</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="salidaLexico"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="mb-3">
+                        <h5 for="salidaSintactico" class="form-label">
+                            <b>RESULTADOS SINTÁCTICO</b>
+                        </h5>
+                        <div id="salidaSintactico" class="card"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script src="assets/js/jquery-3.6.0.min.js"></script>
+<script src="assets/bootstrapV5/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/controles.js"></script>
