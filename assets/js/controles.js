@@ -1,19 +1,11 @@
-const gorArray = ["IMPLEMENT", "EXECUTE"];
+const gorArray = ["MIENTRAS"];
 
 const identificadores = [
-  "IMPLEMENT",
-  "EXECUTE",
-  "ALL",
-  "INSERT",
-  "SELECT",
-  "DELETE",
-  "UPDATE",
-  "DELETE",
-  "AUTHORIZATION",
-  "FROM",
-  "TOWARDS",
+  "MIENTRAS",
+  "<",
+  ">",
 ];
-const privilegios = ["ALL", "INSERT", "SELECT", "DELETE", "UPDATE", "DELETE"];
+const privilegios = ["<"];
 
 // Tokenizar
 const tokenizer = (input) => {
@@ -78,10 +70,10 @@ const tokenizer = (input) => {
     }
 
     if (
-      currentChar === "," ||
-      currentChar === "'" ||
-      currentChar === "*" ||
-      currentChar === "." ||
+      currentChar === "<" ||
+      currentChar === ">" ||
+      currentChar === "(" ||
+      currentChar === ")" ||
       currentChar === "@" ||
       currentChar === "_"
     ) {
@@ -186,6 +178,7 @@ function analizarCodigo() {
     lineas = cargarLineas(text, textSplit);
     lineaHtml = "";
     //PARSER PARA IMPLEMENT O EXECUTE
+    console.log(arrayLinea);
     for (let index = 0; index < arrayLinea.length; index++) {
       //IMPLEMENT O EXECUTE
       if (gorArray.includes(arrayLinea[index].value)) {
@@ -208,7 +201,7 @@ function analizarCodigo() {
           lineaHtml += "<span>" + arrayLinea[index].value + " </span>";
           index += 1;
           //PRIVILEGE
-          if (arrayLinea[index].value == "AUTHORIZATION") {
+          if (arrayLinea[index].type == "TEXTO") {
             generarSintactico(
               "success",
               arrayLinea[index].type,
@@ -218,7 +211,7 @@ function analizarCodigo() {
             lineaHtml += "<span>" + arrayLinea[index].value + " </span>";
             index += 1;
             //FROM
-            if (arrayLinea[index].value == "FROM") {
+            if (arrayLinea[index].value == ">") {
               generarSintactico(
                 "success",
                 arrayLinea[index].type,
@@ -228,7 +221,7 @@ function analizarCodigo() {
               lineaHtml += "<span>" + arrayLinea[index].value + " </span>";
               index += 1;
               //TABLE
-              if (arrayLinea[index].type == "TEXTO") {
+              if (arrayLinea[index].value == "(") {
                 generarSintactico(
                   "success",
                   arrayLinea[index].type,
@@ -238,7 +231,7 @@ function analizarCodigo() {
                 lineaHtml += "<span>" + arrayLinea[index].value + " </span>";
                 index += 1;
                 //TOWARDS
-                if (arrayLinea[index].value == "TOWARDS") {
+                if (arrayLinea[index].type == "TEXTO") {
                   generarSintactico(
                     "success",
                     arrayLinea[index].type,
@@ -248,7 +241,7 @@ function analizarCodigo() {
                   lineaHtml += "<span>" + arrayLinea[index].value + " </span>";
                   index += 1;
                   //'
-                  if (arrayLinea[index].value == "'") {
+                  if (arrayLinea[index].value == ")") {
                     generarSintactico(
                       "success",
                       arrayLinea[index].type,
@@ -258,188 +251,24 @@ function analizarCodigo() {
                     lineaHtml +=
                       "<span>" + arrayLinea[index].value + " </span>";
                     index += 1;
-                    //TEXTO
-                    if (arrayLinea[index].type == "TEXTO") {
+                    //;
+                    if (arrayLinea[index].type == "MARCADOR") {
+                      $("#salida").html(
+                        "<div class='bg-success text-light'>GRAMÁTICA CORRECTA</div>"
+                      );
                       generarSintactico(
                         "success",
                         arrayLinea[index].type,
                         arrayLinea[index].value,
                         "Correcto"
                       );
-                      lineaHtml +=
-                        "<span>" + arrayLinea[index].value + " </span>";
-                      index += 1;
-                      //'
-                      if (arrayLinea[index].value == "'") {
-                        generarSintactico(
-                          "success",
-                          arrayLinea[index].type,
-                          arrayLinea[index].value,
-                          "Correcto"
-                        );
-                        lineaHtml +=
-                          "<span>" + arrayLinea[index].value + " </span>";
-                        index += 1;
-                        //@
-                        if (arrayLinea[index].value == "@") {
-                          generarSintactico(
-                            "success",
-                            arrayLinea[index].type,
-                            arrayLinea[index].value,
-                            "Correcto"
-                          );
-                          lineaHtml +=
-                            "<span>" + arrayLinea[index].value + " </span>";
-                          index += 1;
-                          //'
-                          if (arrayLinea[index].value == "'") {
-                            generarSintactico(
-                              "success",
-                              arrayLinea[index].type,
-                              arrayLinea[index].value,
-                              "Correcto"
-                            );
-                            lineaHtml +=
-                              "<span>" + arrayLinea[index].value + " </span>";
-                            index += 1;
-                            //TEXTO
-                            if (arrayLinea[index].type == "TEXTO") {
-                              generarSintactico(
-                                "success",
-                                arrayLinea[index].type,
-                                arrayLinea[index].value,
-                                "Correcto"
-                              );
-                              lineaHtml +=
-                                "<span>" + arrayLinea[index].value + " </span>";
-                              index += 1;
-                              //'
-                              if (arrayLinea[index].value == "'") {
-                                generarSintactico(
-                                  "success",
-                                  arrayLinea[index].type,
-                                  arrayLinea[index].value,
-                                  "Correcto"
-                                );
-                                lineaHtml +=
-                                  "<span>" +
-                                  arrayLinea[index].value +
-                                  " </span>";
-                                index += 1;
-                                //;
-                                if (arrayLinea[index].type == "MARCADOR") {
-                                  $("#salida").html(
-                                    "<div class='bg-success text-light'>GRAMÁTICA CORRECTA</div>"
-                                  );
-                                  generarSintactico(
-                                    "success",
-                                    arrayLinea[index].type,
-                                    arrayLinea[index].value,
-                                    "Correcto"
-                                  );
-                                  break;
-                                } else {
-                                  mostrarError(
-                                    lineas,
-                                    arrayLinea[index].position,
-                                    arrayLinea[index].value,
-                                    ";",
-                                    lineaHtml
-                                  );
-                                  generarSintactico(
-                                    "danger",
-                                    arrayLinea[index].type,
-                                    arrayLinea[index].value,
-                                    "Incorrecto"
-                                  );
-                                  break;
-                                }
-                              } else {
-                                mostrarError(
-                                  lineas,
-                                  arrayLinea[index].position,
-                                  arrayLinea[index].value,
-                                  "COMILLA SIMPLE",
-                                  lineaHtml
-                                );
-                                generarSintactico(
-                                  "danger",
-                                  arrayLinea[index].type,
-                                  arrayLinea[index].value,
-                                  "Incorrecto"
-                                );
-                                break;
-                              }
-                            } else {
-                              mostrarError(
-                                lineas,
-                                arrayLinea[index].position,
-                                arrayLinea[index].type,
-                                "TEXTO",
-                                lineaHtml
-                              );
-                              generarSintactico(
-                                "danger",
-                                arrayLinea[index].type,
-                                arrayLinea[index].value,
-                                "Incorrecto"
-                              );
-                              break;
-                            }
-                          } else {
-                            mostrarError(
-                              lineas,
-                              arrayLinea[index].position,
-                              arrayLinea[index].value,
-                              "COMILLA SIMPLE",
-                              lineaHtml
-                            );
-                            generarSintactico(
-                              "danger",
-                              arrayLinea[index].type,
-                              arrayLinea[index].value,
-                              "Incorrecto"
-                            );
-                            break;
-                          }
-                        } else {
-                          mostrarError(
-                            lineas,
-                            arrayLinea[index].position,
-                            arrayLinea[index].value,
-                            "@",
-                            lineaHtml
-                          );
-                          generarSintactico(
-                            "danger",
-                            arrayLinea[index].type,
-                            arrayLinea[index].value,
-                            "Incorrecto"
-                          );
-                          break;
-                        }
-                      } else {
-                        mostrarError(
-                          lineas,
-                          arrayLinea[index].position,
-                          arrayLinea[index].value,
-                          "COMILLA SIMPLE",
-                          lineaHtml
-                        );
-                        generarSintactico(
-                          "danger",
-                          arrayLinea[index].type,
-                          arrayLinea[index].value,
-                          "Incorrecto"
-                        );
-                        break;
-                      }
+                      break;
                     } else {
                       mostrarError(
                         lineas,
                         arrayLinea[index].position,
-                        arrayLinea[index].type,
-                        "TEXTO",
+                        arrayLinea[index].value,
+                        ";",
                         lineaHtml
                       );
                       generarSintactico(
@@ -455,7 +284,7 @@ function analizarCodigo() {
                       lineas,
                       arrayLinea[index].position,
                       arrayLinea[index].value,
-                      "COMILLA SIMPLE",
+                      ")",
                       lineaHtml
                     );
                     generarSintactico(
@@ -471,7 +300,7 @@ function analizarCodigo() {
                     lineas,
                     arrayLinea[index].position,
                     arrayLinea[index].value,
-                    "TOWARDS",
+                    "TEXTO",
                     lineaHtml
                   );
                   generarSintactico(
@@ -487,7 +316,7 @@ function analizarCodigo() {
                   lineas,
                   arrayLinea[index].position,
                   arrayLinea[index].type,
-                  "TEXTO",
+                  "(",
                   lineaHtml
                 );
                 generarSintactico(
@@ -503,7 +332,7 @@ function analizarCodigo() {
                 lineas,
                 arrayLinea[index].position,
                 arrayLinea[index].value,
-                "FROM",
+                ">",
                 lineaHtml
               );
               generarSintactico(
@@ -519,7 +348,7 @@ function analizarCodigo() {
               lineas,
               arrayLinea[index].position,
               arrayLinea[index].value,
-              "AUTHORIZATION",
+              "<",
               lineaHtml
             );
             generarSintactico(
@@ -535,7 +364,7 @@ function analizarCodigo() {
             lineas,
             arrayLinea[index].position,
             arrayLinea[index].value,
-            "ALL, SELECT, INSERT, UPDATE, o DELETE",
+            "<",
             lineaHtml
           );
           generarSintactico(
@@ -551,7 +380,7 @@ function analizarCodigo() {
           lineas,
           arrayLinea[index].position,
           arrayLinea[index].value,
-          "IMPLEMENT o EXECUTE",
+          "MIENTRAS",
           lineaHtml
         );
         generarSintactico(
