@@ -17,10 +17,10 @@ const tokenizer = (input) => {
   } else {
     input = input + "; ";
   }
-
   while (current < input.length - 1) {
     const currentChar = input[current];
 
+    console.log(currentChar, 'QQQQQqqq');
     const WHITESPACE = /\s+/;
     if (WHITESPACE.test(currentChar)) {
       current++;
@@ -86,6 +86,34 @@ const tokenizer = (input) => {
       tokens.push(token);
       generarLexico("004", currentChar, "SYMBOLS");
       current++;
+      if (currentChar === '<') {
+        const condicion = input.split(/<|>/);
+        tokens.push({
+          code: "003",
+          type: "TEXTO",
+          value: condicion[1],
+          position: current,
+        });
+        generarLexico("003", condicion[1] , "TEXTO");
+        current += condicion[1]?.length
+      }
+      if (currentChar === '(') {
+        const code = input.split(/[\(\)]/);
+        const newCode = code[1]?.split('\n')
+        for (let i = 0; i < newCode.length; i++) {
+          if (WHITESPACE.test(newCode[i])) {
+            current++;
+          }
+          tokens.push({
+            code: "003",
+            type: "TEXTO",
+            value: newCode[i],
+            position: current,
+          });
+          generarLexico("003", newCode[i] , "TEXTO");
+          current += newCode[i]?.length+1
+        }
+      }
       continue;
     }
 
@@ -117,6 +145,7 @@ function cargarLineas(text, textSplit) {
       }
     }
   }
+  console.log(lineas, '<3');
   return lineas;
 }
 
@@ -127,16 +156,16 @@ function mostrarError(lineas, posicion, tipoError, msgError, linea) {
     " </span>";
   $("#salida").html(
     "<div>Se esperaba '" +
-      msgError +
-      "' , no un -> " +
-      tipoError +
-      "</div><div> ERROR en la linea " +
-      (lineas[posicion - 1].linea + 1) +
-      ", en la posicion -> " +
-      (posicion - 1) +
-      "</div><div class='bg-warning'>" +
-      linea +
-      "</div>"
+    msgError +
+    "' , no un -> " +
+    tipoError +
+    "</div><div> ERROR en la linea " +
+    (lineas[posicion - 1]?.linea + 1) +
+    ", en la posicion -> " +
+    (posicion - 1) +
+    "</div><div class='bg-warning'>" +
+    linea +
+    "</div>"
   );
 }
 
@@ -152,14 +181,14 @@ function generarLexico(code, value, token) {
 function generarSintactico(tipo, type, value, msg) {
   $("#salidaSintactico").append(
     "<div>" +
-      type +
-      " <strong class='text-" +
-      tipo +
-      "'>" +
-      msg +
-      " -> </strong>" +
-      value +
-      "</div>"
+    type +
+    " <strong class='text-" +
+    tipo +
+    "'>" +
+    msg +
+    " -> </strong>" +
+    value +
+    "</div>"
   );
 }
 
@@ -174,11 +203,12 @@ function analizarCodigo() {
     );
   } else {
     const textSplit = text.split("\n");
+    console.log(textSplit, '13===(ª ª)');
 
     lineas = cargarLineas(text, textSplit);
     lineaHtml = "";
     //PARSER PARA IMPLEMENT O EXECUTE
-    console.log(arrayLinea);
+    console.log(arrayLinea, 'kkkkkk');
     for (let index = 0; index < arrayLinea.length; index++) {
       //IMPLEMENT O EXECUTE
       if (gorArray.includes(arrayLinea[index].value)) {
