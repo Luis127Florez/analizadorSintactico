@@ -6,6 +6,7 @@ const identificadores = [
   ">",
 ];
 const privilegios = ["<"];
+let arrayCode = [];
 
 // Tokenizar
 const tokenizer = (input) => {
@@ -20,7 +21,6 @@ const tokenizer = (input) => {
   while (current < input.length - 1) {
     const currentChar = input[current];
 
-    console.log(currentChar, 'QQQQQqqq');
     const WHITESPACE = /\s+/;
     if (WHITESPACE.test(currentChar)) {
       current++;
@@ -73,9 +73,7 @@ const tokenizer = (input) => {
       currentChar === "<" ||
       currentChar === ">" ||
       currentChar === "(" ||
-      currentChar === ")" ||
-      currentChar === "@" ||
-      currentChar === "_"
+      currentChar === ")"
     ) {
       let token = {
         code: "004",
@@ -94,24 +92,33 @@ const tokenizer = (input) => {
           value: condicion[1],
           position: current,
         });
-        generarLexico("003", condicion[1] , "TEXTO");
+        generarLexico("003", condicion[1], "TEXTO");
         current += condicion[1]?.length
       }
       if (currentChar === '(') {
         const code = input.split(/[\(\)]/);
-        const newCode = code[1]?.split('\n')
+        const newCode = code[1]?.split('\n').filter((x) => x !== '')
         for (let i = 0; i < newCode.length; i++) {
-          if (WHITESPACE.test(newCode[i])) {
-            current++;
+          if (/^\s{3}[^\s].*$/.test(newCode[i])) {
+            arrayCode.push(newCode[i])
+            tokens.push({
+              code: "003",
+              type: "TEXTO",
+              value: newCode[i],
+              position: current,
+            });
+            current += newCode[i]?.length + 1;
+            generarLexico("003", newCode[i], "TEXTO");
+          } else {
+            if (newCode[i] == '' || newCode[i] == ' ') {
+
+              current += newCode[i]?.length + 1;
+
+            } else {
+              generarLexico("ERROR", newCode[i], `INDENTATION INVÁLIDA ${newCode[i]}`)
+              current += newCode[i]?.length;
+            }
           }
-          tokens.push({
-            code: "003",
-            type: "TEXTO",
-            value: newCode[i],
-            position: current,
-          });
-          generarLexico("003", newCode[i] , "TEXTO");
-          current += newCode[i]?.length+1
         }
       }
       continue;
@@ -145,7 +152,6 @@ function cargarLineas(text, textSplit) {
       }
     }
   }
-  console.log(lineas, '<3');
   return lineas;
 }
 
@@ -193,22 +199,21 @@ function generarSintactico(tipo, type, value, msg) {
 }
 
 function analizarCodigo() {
+  arrayCode = [];
   $("#salidaLexico").html("");
   $("#salidaSintactico").html("");
   arrayLinea = tokenizer($("#codigo").val());
   text = $("#codigo").val();
   if (text == "" || text == null) {
     $("#salida").html(
-      "<strong class='bg-warning'>SIN LÍNEAS DE CÓDIGO, ESCRIBE O PEGA EL CÓDIGO A ANALIZAR</strong>"
+      "<strong class='card text-bg-danger mb-3'>Por favor, ingresa o pega el código que deseas analizar. No se ha proporcionado ninguna línea de código.</strong>"
     );
   } else {
     const textSplit = text.split("\n");
-    console.log(textSplit, '13===(ª ª)');
 
     lineas = cargarLineas(text, textSplit);
     lineaHtml = "";
     //PARSER PARA IMPLEMENT O EXECUTE
-    console.log(arrayLinea, 'kkkkkk');
     for (let index = 0; index < arrayLinea.length; index++) {
       //IMPLEMENT O EXECUTE
       if (gorArray.includes(arrayLinea[index].value)) {
@@ -262,16 +267,19 @@ function analizarCodigo() {
                 index += 1;
                 //TOWARDS
                 if (arrayLinea[index].type == "TEXTO") {
-                  generarSintactico(
-                    "success",
-                    arrayLinea[index].type,
-                    arrayLinea[index].value,
-                    "Correcto"
-                  );
-                  lineaHtml += "<span>" + arrayLinea[index].value + " </span>";
-                  index += 1;
+                  for (let i = 0; i < arrayCode.length; i++) {
+                    generarSintactico(
+                      "success",
+                      arrayLinea[index]?.type,
+                      arrayLinea[index]?.value,
+                      "Correcto"
+                    );
+                    lineaHtml += "<span>" + arrayLinea[index]?.value + " </span>";
+                    index += 1;
+
+                  }
                   //'
-                  if (arrayLinea[index].value == ")") {
+                  if (arrayLinea[index]?.value == ")") {
                     generarSintactico(
                       "success",
                       arrayLinea[index].type,
@@ -312,15 +320,15 @@ function analizarCodigo() {
                   } else {
                     mostrarError(
                       lineas,
-                      arrayLinea[index].position,
-                      arrayLinea[index].value,
+                      arrayLinea[index]?.position,
+                      arrayLinea[index]?.value,
                       ")",
                       lineaHtml
                     );
                     generarSintactico(
                       "danger",
-                      arrayLinea[index].type,
-                      arrayLinea[index].value,
+                      arrayLinea[index]?.type,
+                      arrayLinea[index]?.value,
                       "Incorrecto"
                     );
                     break;

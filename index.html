@@ -9,14 +9,38 @@
     <link rel="stylesheet" href="assets/bootstrapV5/css/bootstrap.min.css" />
     <link rel="stylesheet" href="assets/css/style.css" />
 </head>
+    <style>
+        body {
+            padding-top: 4.5rem;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .navbar {
+            background-color: black;
+        }
+
+        .navbar-brand {
+            color: white;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 6px;
+        }
+        #codigo {
+            max-width: 700px;
+        }
+    </style>
 
 <body>
     <!-- Header -->
-    <nav class="navbar navbar-secondary bg-primary">
-        <div style="display: flex; flex-direction: row; align-items: center; margin: 0 auto;">
-            <img src="assets/img/logo.png" alt="" width="80" height="80" />
-            &nbsp &nbsp
-            <h1 class="text-white">ANALIZADOR SINTÁCTICO</h1>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Parser FTH</a>
         </div>
     </nav>
 
@@ -27,15 +51,12 @@
             <div style="display: flex; flex-direction: column;">
                 <div class="row" style="display: flex; flex-direction: column;">
                     <div class="col">
-                        <div class="mb-3">
-                            <label>
-                                <b>¿Qué es un analizador sintáctico?</b> <br />
-                                Un analizador sintáctico o simplemente analizador, es un programa informático que
-                                analiza una cadena de símbolos según las reglas de una gramática formal.
-                            </label>
-                            <br />
-                            <br />
-                            <label for="codigo" class="form-label"><b>Escribe o pega el código a analizar</b></label>
+                        <div class="col">
+                            <label class="form-label"><b>¿Qué es un analizador sintáctico?</b></label>
+                            <p>
+                                Un analizador sintáctico o simplemente analizador, es un programa informático que analiza una
+                                cadena de símbolos según las reglas de una gramática formal.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -66,12 +87,12 @@
                 <!-- Buttons -->
                 <div class="row">
                     <div class="col" align="right">
-                        <button id="limpiar" type="button" class="btn btn-secondary" onclick="limpiarTexto();">
+                        <button id="limpiar" type="button" class="btn btn-info" onclick="limpiarTexto();">
                             LIMPIAR
                         </button>
                     </div>
                     <div class="col">
-                        <button id="analizar" type="button" class="btn btn-primary" onclick="analizarCodigo();">
+                        <button id="analizar" type="button" class="btn btn-success" onclick="analizarCodigo();">
                             ANALIZAR
                         </button>
                     </div>

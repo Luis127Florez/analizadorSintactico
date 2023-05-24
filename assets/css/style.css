@@ -10,7 +10,7 @@ main{
   align-items: center;
 }
 .editor{
-  background: #1e70f8;
+  background: #0dcaf0;
   display: flex;
   flex-direction:row;
   height:var(--HEIGTH);
@@ -24,8 +24,8 @@ main{
 
 .line p {
     margin:2px 2px;
-    background-color: #fdc032;
-    color:#202121;
+    background-color: #000000;
+    color:#ffffff;
     text-align: center;
     font-size:13px;
     padding-top:2px;
